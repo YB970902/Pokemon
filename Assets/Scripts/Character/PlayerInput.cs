@@ -9,33 +9,33 @@ using UnityEngine;
 /// </summary>
 public class PlayerInput : MonoBehaviour
 {
-    private Movement movement; 
+    private PlayerMovement playerMovement; 
     
     private void Start()
     {
-        movement = GetComponent<Movement>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void Update()
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            movement?.SetMoveDirection(Character.Direction.Up);
+            playerMovement?.SetMoveDirection(Character.Direction.Up);
         }
         
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            movement?.SetMoveDirection(Character.Direction.Down);
+            playerMovement?.SetMoveDirection(Character.Direction.Down);
         }
         
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            movement?.SetMoveDirection(Character.Direction.Left);
+            playerMovement?.SetMoveDirection(Character.Direction.Left);
         }
         
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            movement?.SetMoveDirection(Character.Direction.Right);
+            playerMovement?.SetMoveDirection(Character.Direction.Right);
         }
     }
 }

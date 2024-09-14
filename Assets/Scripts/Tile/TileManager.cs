@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
@@ -35,6 +36,10 @@ public class TileManager : MonoBehaviour
     /// <summary> 타일의 크기 </summary>
     private float tileSize = 1f;
 
+    private const int ZeroNumber = '0';
+
+    private GameObject player;
+
     private void Awake()
     {
         mapDatas = new List<int>();
@@ -50,18 +55,33 @@ public class TileManager : MonoBehaviour
             Debug.LogError($"맵 데이터가 없습니다.{_mapPath}");
         };
         
-        string[] lines = textAsset.text.Split("\n");
-        mapSize.x = lines[0].Length;
+        string[] lines = textAsset.text.Split(System.Environment.NewLine);
+        mapSize.x = lines[1].Length;
         mapSize.y = lines.Length;
 
         mapDatas.Clear();
 
-        for (int i = 0; i < lines.Length; ++i)
+        var firstLine = lines[0].Split(' ');
+        Vector2Int startIndex = new Vector2Int();
+        startIndex.x = int.Parse(firstLine[0]);
+        startIndex.y = int.Parse(firstLine[1]);
+        
+        if (player != null)
+        {
+            player.transform.position = GetPosition(startIndex);
+        }
+        else
+        {
+            var prefab = Resources.Load<GameObject>("Prefabs/Player");
+            player = Instantiate(prefab, GetPosition(startIndex), Quaternion.identity);
+        }
+
+        for (int i = 1; i < lines.Length; ++i)
         {
             var line = lines[i];
             for (int j = 0 ; j < line.Length; ++j)
             {
-                var tileID = int.Parse(line[j].ToString());
+                var tileID = line[j] - ZeroNumber;
                 CreateTile(i * line.Length + j, tileID);
                 mapDatas.Add(tileID);
             }
@@ -123,7 +143,7 @@ public class TileManager : MonoBehaviour
 
     public Vector2Int GetTileIndex(int _index)
     {
-        return new Vector2Int(_index % mapSize.x, mapSize.y - _index / mapSize.x);
+        return new Vector2Int(_index % mapSize.x, mapSize.y - _index / mapSize.x - 1);
     }
 
     public Vector2Int GetTileIndex(Vector2 _position)
