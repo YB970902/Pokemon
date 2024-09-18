@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
+using Define;
 using UnityEngine;
 
+/// <summary>
+/// 맵에 생성되어 있는 타일을 관리하는 타일 매니저.
+/// Vector2Int 타입으로 타일의 인덱스를 관리한다.
+/// 좌표가 (0, 0) 인 경우 좌측 하단을 의미하고, x축이 증가하면 오른쪽으로 움직이고 y축이 증가하면 위로 움직인다.
+/// </summary>
 public class TileManager : MonoBehaviour
 {
     #region Singleton
@@ -16,7 +20,12 @@ public class TileManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = new GameObject().AddComponent<TileManager>();
+                // 이미 있으면 사용한다.
+                instance = FindAnyObjectByType<TileManager>();
+                if (instance == null)
+                {
+                    instance = new GameObject().AddComponent<TileManager>();
+                }
             }
 
             return instance;
@@ -30,7 +39,7 @@ public class TileManager : MonoBehaviour
 
     private const string MapPath = "MapData/MapData";
 
-    private List<int> mapDatas;
+    private List<Map.TileType> tileTypeList;
     private List<GameObject> mapObjects;
 
     /// <summary> 타일의 크기 </summary>
@@ -42,7 +51,7 @@ public class TileManager : MonoBehaviour
 
     private void Awake()
     {
-        mapDatas = new List<int>();
+        tileTypeList = new List<Map.TileType>();
         mapObjects = new List<GameObject>();
         LoadMap(MapPath);
     }
@@ -57,9 +66,9 @@ public class TileManager : MonoBehaviour
         
         string[] lines = textAsset.text.Split(System.Environment.NewLine);
         mapSize.x = lines[1].Length;
-        mapSize.y = lines.Length;
+        mapSize.y = lines.Length - 1;
 
-        mapDatas.Clear();
+        tileTypeList.Clear();
 
         var firstLine = lines[0].Split(' ');
         Vector2Int startIndex = new Vector2Int();
@@ -76,14 +85,15 @@ public class TileManager : MonoBehaviour
             player = Instantiate(prefab, GetPosition(startIndex), Quaternion.identity);
         }
 
-        for (int i = 1; i < lines.Length; ++i)
+        for (int y = lines.Length - 1; y >= 1; --y)
         {
-            var line = lines[i];
-            for (int j = 0 ; j < line.Length; ++j)
+            var line = lines[y];
+            for (int x = 0 ; x < line.Length; ++x)
             {
-                var tileID = line[j] - ZeroNumber;
-                CreateTile(i * line.Length + j, tileID);
-                mapDatas.Add(tileID);
+                var index = (mapSize.y - y) * line.Length + x;
+                var tileID = line[x] - ZeroNumber;
+                CreateTile(index, tileID);
+                tileTypeList.Add((Map.TileType)tileID);
             }
         }
     }
@@ -97,23 +107,7 @@ public class TileManager : MonoBehaviour
             return;
         }
         
-        string spriteName = string.Empty;
-        
-        switch (_tileID)
-        {
-            case 0:
-                spriteName = "Ground";
-                break;
-            case 1:
-                spriteName = "Tree";
-                break;
-            case 2:
-                spriteName = "Bush";
-                break;
-            default:
-                Debug.LogError($"타일이 없습니다 tileID : {_tileID}");
-                return;
-        }
+        string spriteName = ((Map.TileType)_tileID).ToString();
 
         Sprite sprite = null;
         foreach (var tile in tileSprites)
@@ -143,11 +137,31 @@ public class TileManager : MonoBehaviour
 
     public Vector2Int GetTileIndex(int _index)
     {
-        return new Vector2Int(_index % mapSize.x, mapSize.y - _index / mapSize.x - 1);
+        return new Vector2Int(_index % mapSize.x, _index / mapSize.x);
     }
 
     public Vector2Int GetTileIndex(Vector2 _position)
     {
         return new Vector2Int((int)(_position.x / tileSize), (int)(_position.y / tileSize));
+    }
+
+    public Map.TileType GetTileType(int _index)
+    {
+        return tileTypeList[_index];
+    }
+    
+    public Map.TileType GetTileType(Vector2Int _tileIndex)
+    {
+        return tileTypeList[_tileIndex.x + _tileIndex.y * mapSize.x];
+    }
+
+    public bool IsObstacle(Vector2Int _tileIndex)
+    {
+        return GetTileType(_tileIndex) == Map.TileType.Tree;
+    }
+
+    public bool IsBush(Vector2Int _tileIndex)
+    {
+        return GetTileType(_tileIndex) == Map.TileType.Bush;
     }
 }

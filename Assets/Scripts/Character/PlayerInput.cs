@@ -9,33 +9,28 @@ using UnityEngine;
 /// </summary>
 public class PlayerInput : MonoBehaviour
 {
-    private PlayerMovement playerMovement; 
-    
-    private void Start()
-    {
-        playerMovement = GetComponent<PlayerMovement>();
-    }
+    [SerializeField] private PlayerController playerController;
 
     void Update()
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            playerMovement?.SetMoveDirection(Character.Direction.Up);
+            playerController.Move(Character.Direction.Up);
         }
         
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            playerMovement?.SetMoveDirection(Character.Direction.Down);
+            playerController.Move(Character.Direction.Down);
         }
         
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            playerMovement?.SetMoveDirection(Character.Direction.Left);
+            playerController.Move(Character.Direction.Left);
         }
         
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            playerMovement?.SetMoveDirection(Character.Direction.Right);
+            playerController.Move(Character.Direction.Right);
         }
     }
 }

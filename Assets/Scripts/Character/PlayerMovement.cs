@@ -8,15 +8,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     /// <summary> 현재 내가 서 있는 타일의 인덱스 </summary>
-    private Vector2Int tileIndex;
+    public Vector2Int TileIndex { get; private set; }
     /// <summary> 이동할 다음 타일 인덱스 </summary>
     private Vector2Int nextTileIndex;
-
+    
     /// <summary> 이동중인지 여부 </summary>
     public bool IsMove { get; private set; }
     public Character.Direction Direction { get; private set; }
 
-    private float elaspedTime;
+    private float elapsedTime;
     private const float durationTime = 0.5f;
 
     public Action<bool> OnChangeMoveState { get; set; }
@@ -24,23 +24,27 @@ public class PlayerMovement : MonoBehaviour
     
     private void Start()
     {
-        tileIndex = TileManager.Instance.GetTileIndex(transform.position);
+        TileIndex = TileManager.Instance.GetTileIndex(transform.position);
         IsMove = false;
         Direction = Character.Direction.Down;
-        elaspedTime = 0.0f;
+        elapsedTime = 0.0f;
     }
 
     public void SetMoveDirection(Character.Direction _direction)
     {
-        if (IsMove) return;
-
         OnChangeDirection?.Invoke(_direction);
         Direction = _direction;
-        nextTileIndex = tileIndex;
+        nextTileIndex = TileIndex;
         nextTileIndex += _direction.GetTileDirection();
 
         IsMove = true;
         OnChangeMoveState?.Invoke(true);
+    }
+
+    public void SetRotation(Character.Direction _direction)
+    {
+        nextTileIndex = TileIndex + _direction.GetTileDirection();
+        OnChangeDirection?.Invoke(_direction);
     }
 
     void Update()
@@ -49,15 +53,15 @@ public class PlayerMovement : MonoBehaviour
         {
             var tileManager = TileManager.Instance;
 
-            elaspedTime += Time.deltaTime;
-            var t = elaspedTime / durationTime;
-            transform.position = Vector2.Lerp(tileManager.GetPosition(tileIndex), tileManager.GetPosition(nextTileIndex), t);
+            elapsedTime += Time.deltaTime;
+            var t = elapsedTime / durationTime;
+            transform.position = Vector2.Lerp(tileManager.GetPosition(TileIndex), tileManager.GetPosition(nextTileIndex), t);
             if (t >= 1.0f)
             {
                 OnChangeMoveState?.Invoke(false);
                 IsMove = false;
-                tileIndex = nextTileIndex;
-                elaspedTime = 0.0f;
+                TileIndex = nextTileIndex;
+                elapsedTime = 0.0f;
             }
         }
     }

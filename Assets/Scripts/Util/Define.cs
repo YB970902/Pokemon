@@ -11,4 +11,14 @@ namespace Define
             Right,
         }
     }
+
+    public static class Map
+    {
+        public enum TileType
+        {
+            Ground,
+            Tree,
+            Bush,
+        }
+    }
 }
