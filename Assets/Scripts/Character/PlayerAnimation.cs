@@ -21,3 +21,20 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool(KeyIsWalk, _isMove);
     }
 }
+
+
+public class Something
+{
+    public void Init()
+    {
+        var listType = typeof(List<>);
+        var genericListType = listType.MakeGenericType(Type.GetType("DataBase"));
+        var instance = Activator.CreateInstance(genericListType);
+        var newInstance = instance;
+    }
+}
+
+public class DataBase
+{
+    
+}
