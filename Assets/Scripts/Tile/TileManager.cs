@@ -8,55 +8,29 @@ using UnityEngine;
 /// Vector2Int 타입으로 타일의 인덱스를 관리한다.
 /// 좌표가 (0, 0) 인 경우 좌측 하단을 의미하고, x축이 증가하면 오른쪽으로 움직이고 y축이 증가하면 위로 움직인다.
 /// </summary>
-public class TileManager : MonoBehaviour
+public class TileManager : MonoSingleton<TileManager>
 {
-    #region Singleton
-
-    private static TileManager instance;
-
-    public static TileManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                // 이미 있으면 사용한다.
-                instance = FindAnyObjectByType<TileManager>();
-                if (instance == null)
-                {
-                    instance = new GameObject().AddComponent<TileManager>();
-                }
-            }
-
-            return instance;
-        }
-    }
-
-    #endregion
-
     /// <summary> 맵의 크기 </summary>
     private Vector2Int mapSize = new Vector2Int();
 
-    private const string MapPath = "MapData/MapData";
-
     private List<Map.TileType> tileTypeList;
     private List<GameObject> mapObjects;
+
+    /// <summary> 플레이어 소환 인덱스 </summary>
+    public Vector2Int PlayerSpawnIndex { get; private set; }
 
     /// <summary> 타일의 크기 </summary>
     private float tileSize = 1f;
 
     private const int ZeroNumber = '0';
 
-    private GameObject player;
-
     private void Awake()
     {
         tileTypeList = new List<Map.TileType>();
         mapObjects = new List<GameObject>();
-        LoadMap(MapPath);
     }
 
-    void LoadMap(string _mapPath)
+    public void LoadMap(string _mapPath)
     {
         TextAsset textAsset = Resources.Load<TextAsset>(_mapPath);
         if (textAsset == null)
@@ -71,19 +45,7 @@ public class TileManager : MonoBehaviour
         tileTypeList.Clear();
 
         var firstLine = lines[0].Split(' ');
-        Vector2Int startIndex = new Vector2Int();
-        startIndex.x = int.Parse(firstLine[0]);
-        startIndex.y = int.Parse(firstLine[1]);
-        
-        if (player != null)
-        {
-            player.transform.position = GetPosition(startIndex);
-        }
-        else
-        {
-            var prefab = Resources.Load<GameObject>("Prefabs/Player");
-            player = Instantiate(prefab, GetPosition(startIndex), Quaternion.identity);
-        }
+        PlayerSpawnIndex = new Vector2Int(int.Parse(firstLine[0]), int.Parse(firstLine[1]));
 
         for (int y = lines.Length - 1; y >= 1; --y)
         {
