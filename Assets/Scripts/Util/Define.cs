@@ -21,4 +21,13 @@ namespace Define
             Bush,
         }
     }
+
+    public static class UI
+    {
+        public enum UIType
+        {
+            FullScreen, // 화면을 꽉 채우는 UI
+            Windowed, // 화면을 다 채우지 않는 UI
+        }
+    }
 }
