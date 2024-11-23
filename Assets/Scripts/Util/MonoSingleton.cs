@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MonoSingleton<T> : MonoBehaviour where T : Component
 {
-    private static bool isInit = false;
+    public static bool IsInit { get; private set; } = false;
     
     private static T instance;
 
@@ -22,8 +22,6 @@ public class MonoSingleton<T> : MonoBehaviour where T : Component
                 {
                     instance = new GameObject().AddComponent<T>();
                 }
-                
-                DontDestroyOnLoad(instance);
             }
 
             return instance;
@@ -32,13 +30,15 @@ public class MonoSingleton<T> : MonoBehaviour where T : Component
 
     protected virtual void Awake()
     {
-        if (isInit)
+        if (IsInit)
         {
             Destroy(gameObject);
             return;
         }
+        
+        DontDestroyOnLoad(gameObject);
 
-        isInit = true;
+        IsInit = true;
         Init();
     }
 

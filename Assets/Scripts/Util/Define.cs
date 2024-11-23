@@ -29,5 +29,21 @@ namespace Define
             FullScreen, // 화면을 꽉 채우는 UI
             Windowed, // 화면을 다 채우지 않는 UI
         }
+
+        public const string UIFadeOut = "Prefabs/UI/Direction/UIFadeOut";
+        public const string UIBattle = "Prefabs/UI/Battle/UIBattle";
+    }
+    
+    public static class Battle
+    {
+        public enum BattleState
+        {
+            None, // 배틀중이지 않음.
+            Intro, // 최초 적과 조우
+            SelectSkill, // 스킬 선택
+            Attack, // 적에게 공격
+            Damaged, // 피해
+            End, // 배틀 종료
+        }
     }
 }

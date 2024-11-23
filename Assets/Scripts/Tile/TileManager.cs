@@ -24,8 +24,10 @@ public class TileManager : MonoSingleton<TileManager>
 
     private const int ZeroNumber = '0';
 
-    private void Awake()
+    protected override void Init()
     {
+        base.Init();
+        
         tileTypeList = new List<Map.TileType>();
         mapObjects = new List<GameObject>();
     }

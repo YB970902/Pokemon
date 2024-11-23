@@ -5,8 +5,6 @@ using UnityEngine;
 public class LDStatus : LocalDataBase
 {
     public int Atk { get; set; }
-    public float Def { get; set; }
-    public string Name { get; set; }
-    public List<int> Param { get; set; }
-    public StatusType StatusType { get; set; }
+    public int Def { get; set; }
+    public int Hp { get; set; }
 }

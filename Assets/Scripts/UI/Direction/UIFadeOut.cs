@@ -19,13 +19,14 @@ public class UIFadeOut : UIBase
         imgFadeOut.gameObject.SetActive(false);
     }
 
-    public void Set(float _durationTime, float _directionTime)
+    public void Set(float _durationTime, float _directionTime, Action _cbClose = null)
     {
         imgFadeOut.gameObject.SetActive(true);
         imgFadeOut.fillAmount = 0f;
         elapsedTime = 0f;
         durationTime = _durationTime;
         directionTime = _directionTime;
+        cbClose = _cbClose;
     }
 
     private void Update()

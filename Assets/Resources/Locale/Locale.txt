@@ -1,0 +1,12 @@
+"Pokemon.1.Name"="파이리";
+"Pokemon.2.Name"="이상해씨";
+"Pokemon.3.Name"="꼬부기";
+"Pokemon.4.Name"="피카츄";
+"Skill.1.Name"="몸통박치기";
+"Skill.2.Name"="화염자동차";
+"Skill.3.Name"="백만볼트";
+"Skill.4.Name"="튀어오르기";
+"Skill.5.Name"="파괴광선";
+"Skill.6.Name"="하이드로펌프";
+"Skill.7.Name"="리프블레이드";
+"Battle.Intro"="야생의 {0}이(가) 나타났다!";

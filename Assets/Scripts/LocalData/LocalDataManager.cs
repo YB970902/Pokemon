@@ -11,22 +11,22 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-public enum StatusType
-{
-    None,
-    Data,
-}
-
 public class LocalDataManager : Singleton<LocalDataManager>
 {
     private const string RelativeLocalDataFolder = "/Resources/LocalData";
     private readonly string AbsoluteLocalDataFolder = Application.dataPath + RelativeLocalDataFolder;
 
+    public LocalDataList<LDPokemon> Pokemon { get; private set; }
     public LocalDataList<LDStatus> Status { get; private set; }
+    public LocalDataList<LDSkill> Skill { get; private set; }
 
     public LocalDataManager()
     {
+        Pokemon = new LocalDataList<LDPokemon>();
         Status = new LocalDataList<LDStatus>();
+        Skill = new LocalDataList<LDSkill>();
+        
+        LoadAll();
     }
     
     /// <summary>

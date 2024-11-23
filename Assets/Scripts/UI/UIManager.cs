@@ -5,16 +5,6 @@ using Define;
 using UnityEngine;
 using UnityEngine.UI;
 
-/*
- *  1. UI 캐싱 (했음)
- *      - 한번 사용한 UI는 재사용될 가능성이 높음.
- *      - 사용후에 지우지 않고, 따로 보관했다가 필요할때 꺼내쓰면 좋음.
- *  2. UI 기본 기능
- *      - UI가 완전히 로드된 후 호출되는 함수 (했음)
- *      - 닫기 (했음)
- *      - UI의 타입 구분 (화면을 꽉 채우는 UI, 화면위로 표시되는 UI)
- */
-
 public class UIManager : MonoSingleton<UIManager>
 {
     [field: SerializeField]
@@ -102,9 +92,14 @@ public class UIManager : MonoSingleton<UIManager>
         
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UIFadeOut ui;
-            Show("Prefabs/UI/Direction/UIFadeOut", out ui);
-            ui.Set(2f, 1.5f);
+            // 페이드 아웃 끝나고, 포켓몬 등장하는 로직. + UI등장
+            void OnFadeOutEnd()
+            {
+                GameManager.Instance.BattleModule.BattleStart();
+            }
+            
+            Show(UI.UIFadeOut, out UIFadeOut ui);
+            ui.Set(2f, 1.5f, OnFadeOutEnd);
         }
     }
 }
