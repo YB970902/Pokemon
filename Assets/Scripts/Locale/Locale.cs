@@ -23,6 +23,7 @@ public class Locale : MonoSingleton<Locale>
             
             string key = kv[0].Substring(kv[0].IndexOf("\"") + 1);
             string value = kv[1].Substring(0, kv[1].LastIndexOf("\""));
+            value = value.Replace("\\n", "\n");
             localeDict.Add(key, value);
         }
     }

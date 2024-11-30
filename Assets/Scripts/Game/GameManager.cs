@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    [field: SerializeField]
     public BattleModule BattleModule { get; private set; }
     public PlayerController Player { get; private set; }
     
@@ -22,15 +23,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         InitModule();
     }
-
-    private void Update()
-    {
-        BattleModule.Update();
-    }
-
+    
     private void InitModule()
     {
-        BattleModule = new BattleModule();
         BattleModule.Init();
     }
 }

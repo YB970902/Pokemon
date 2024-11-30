@@ -6,25 +6,25 @@ using UnityEngine.Rendering.Universal;
 
 public class CameraManager : MonoSingleton<CameraManager>
 {
+    [SerializeField] Transform trBattle;
     private Camera camera;
     private Transform trPlayer;
 
     private Vector2Int canvasResolution;
 
+    private Define.Camera.CameraMode cameraMode;
+
     protected override void Init()
     {
         base.Init();
         camera = Camera.main;
+        cameraMode = Define.Camera.CameraMode.FollowPlayer;
     }
 
     private void Start()
     {
         Vector2 referenceResolution = UIManager.Instance.CommonScaler.referenceResolution;
         canvasResolution = new Vector2Int(Mathf.RoundToInt(referenceResolution.x), Mathf.RoundToInt(referenceResolution.y));
-    }
-
-    private void Update()
-    {
         SetResolution();
     }
 
@@ -64,10 +64,24 @@ public class CameraManager : MonoSingleton<CameraManager>
         }
     }
 
+    public void SetCameraMode(Define.Camera.CameraMode _cameraMode)
+    {
+        cameraMode = _cameraMode;
+        if (cameraMode == Define.Camera.CameraMode.Battle)
+        {
+            var z = camera.transform.position.z;
+            camera.transform.position = trBattle.position;
+            camera.transform.position += Vector3.forward * z;
+        }
+    }
+
     private void LateUpdate()
     {
-        var playerPos = trPlayer.position;
-        playerPos.z = camera.transform.position.z;
-        camera.transform.position = playerPos;
+        if(cameraMode == Define.Camera.CameraMode.FollowPlayer)
+        {
+            var playerPos = trPlayer.position;
+            playerPos.z = camera.transform.position.z;
+            camera.transform.position = playerPos;
+        }
     }
 }

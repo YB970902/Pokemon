@@ -43,7 +43,18 @@ namespace Define
             SelectSkill, // 스킬 선택
             Attack, // 적에게 공격
             Damaged, // 피해
+            PlayerDead, // 플레이어 죽음
+            EnemyDead, // 적 죽음
             End, // 배틀 종료
+        }
+    }
+
+    public static class Camera
+    {
+        public enum CameraMode
+        {
+            FollowPlayer,
+            Battle,
         }
     }
 }
